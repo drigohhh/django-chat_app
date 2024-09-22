@@ -67,6 +67,7 @@ venv/
 
 # Misc
 .mypy_cache
+.ruff_cache
 /staticfiles
 
 # IDEs

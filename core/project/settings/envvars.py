@@ -12,4 +12,4 @@ IN_DOCKER (where the value would be True)
 """
 
 # globals() is a dictionary of global variables
-deep_update(globals(), get_settings_from_enviroment(ENVVAR_SETTINGS_PREFIX)) # type: ignore # noqa: F821
+deep_update(globals(), get_settings_from_enviroment(ENVVAR_SETTINGS_PREFIX))  # type: ignore # noqa: F821

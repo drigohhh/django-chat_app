@@ -1,0 +1,32 @@
+{% extends "includes/base.html" %}
+
+{% block title %}CHAT APP TEST{% endblock %}
+
+{% block content %}
+
+{% if latest_messages_list %}
+
+<fieldset class="position-absolute bottom-0 start-50 translate-middle-x fieldset-messages">
+  {% for message in latest_messages_list %}
+
+  <div class="d-flex justify-content-end user-messages">
+    <div class="message-bubble"> {{message.message_text}} </div>
+  </div>
+
+  {% endfor %}
+</fieldset>
+
+{% endif %}
+
+
+<form action="{% url "sendMessage" %}" method="POST">
+  {% csrf_token %}
+
+  <fieldset class="d-flex justify-content-between align-items-end fieldset-default">
+
+    <input type="text" class="form-control" placeholder="Digite aqui..." name="message">
+    <input type="submit" value="Enviar" class="btn btn-primary" style="margin-left: 10px;">
+  </fieldset>
+
+</form>
+{% endblock content %}

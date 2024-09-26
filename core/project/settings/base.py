@@ -30,7 +30,7 @@ ROOT_URLCONF = "core.project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "core/project/templates"],  # noqa: F821 # type: ignore
+        "DIRS": [BASE_DIR / "core/project/templates"],  # type: ignore
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -52,7 +52,7 @@ WSGI_APPLICATION = "core.project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "C:\\Users\\rodri\\OneDrive\\Documents\\Visual Studio Code\\PP ML\\django\\chat_app\\db.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",  # type: ignore
     }
 }
 

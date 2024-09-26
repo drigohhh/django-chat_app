@@ -1,8 +1,17 @@
+# By using split_settings, this code serves the purpose of
+# appending all .py codes present in the settings folder
+# together for them to run as a whole.
+"""
+Remember to set up the virtual environment by using venv
+or Poetry
+"""
+
 import os.path
 from pathlib import Path
 
 from split_settings.tools import include, optional
 
+# Gets the project directory
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 # Namespacing our own custom enviroment variables
@@ -22,5 +31,4 @@ include(
     "custom.py",
     optional(LOCAL_SETTINGS_PATH),
     "envvars.py",
-    "docker.py",
 )

@@ -24,7 +24,7 @@ def sendMessage(request):
 
     if not request.POST["message"]:
         log.error("MENSAGEM VAZIA!")
-        return Http404("MENSAGEM VAZIA!")
+        raise Http404("MENSAGEM VAZIA!")
 
     try:
         message = Message(

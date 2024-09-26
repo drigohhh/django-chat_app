@@ -14,7 +14,7 @@ repos:
     hooks:
     #   Run the linter.
     -   id: ruff
-    #   '--select I' for automatically formatting import alphabetically
+    #   '--select I' to automatically format the imports alphabetically
         args: [ --fix, --select, I]
     #   Run the formatter.
     -   id: ruff-format

@@ -37,7 +37,7 @@ multiline-quotes = "double"
 max-complexity = 12
 
 [tool.ruff.lint.extend-per-file-ignores]
-"core/project/settings/templates/settings.dev.py" = ["F821"]
+"core/project/settings/**/*.py" = ["F821"]
 
 [build-system]
 requires = ["poetry-core"]

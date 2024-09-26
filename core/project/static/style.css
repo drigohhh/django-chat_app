@@ -1,76 +1,72 @@
 body {
     background-color: #2c2f33;
-    color: #ffffff; /* Cor de texto clara para contraste */
+    color: #ffffff;
 }
 
 .fieldset-default {
     width: 700px;
     position: absolute;
-    bottom: 20px; /* Adiciona um espaço de 20px entre o fieldset e o chão */
-    /* as duas linhas abaixo são responsaveis por centralizar a chat bar */
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     border: 1px solid #2c2f33;
-    margin-bottom: 20px; /* Adiciona um espaço abaixo do fieldset */
+    margin-bottom: 20px;
 }
 
 .form-control {
     background-color: #40444b !important;
-    color: #ffffff !important; /* Texto claro para contraste */
-    border: 3px solid transparent; /* Começa com borda transparente */
-    transition: border-color 0.3s ease; /* Define a transição para a cor da borda */
-    padding: 15px 20px; /* Aumenta o espaçamento interno (superior/inferior e laterais) */
-    font-size: 18px; /* Aumenta o tamanho do texto */
-    height: 60px; /* Define uma altura maior */
-    width: 100%; /* Garante que o input ocupe toda a largura do container */
-    box-sizing: border-box; /* Inclui padding e borda na largura total */
+    color: #ffffff !important;
+    border: 3px solid transparent;
+    transition: border-color 0.3s ease;
+    padding: 15px 20px;
+    font-size: 18px;
+    height: 60px;
+    width: 100%;
+    box-sizing: border-box;
     border-radius: 30px;
 }
 
 .btn-primary {
-    border: none; /* Remove a borda padrão */
-    border-radius: 30px; /* Igual ao input */
-    padding: 0 15px; /* Remove o padding superior/inferior e mantém apenas nas laterais */
-    color: #ffffff; /* Cor do texto do botão */
-    height: 57px; /* altura do input - border */
+    border: none;
+    border-radius: 30px;
+    padding: 0 15px;
+    color: #ffffff;
+    height: 57px;
     font-size: 18px;
 }
 
 input::placeholder {
-    color: #cccccc !important; /* Cor clara para o placeholder */
-    opacity: 1; /* Garante que o placeholder tenha a opacidade desejada */
+    color: #cccccc !important;
+    opacity: 1;
 }
 
 input.form-control:focus {
-    border-color: #00c8ff; /* Altera a cor da borda ao focar */
+    border-color: #00c8ff;
 }
 
 .fieldset-messages {
     width: 700px;
     position: absolute;
-    margin-bottom: 115px; /* Adiciona um espaço de 20px entre o fieldset e o chão */
-    /* as duas linhas abaixo são responsaveis por centralizar a chat bar */
-    max-height: calc(100vh - 200px); /* Ajuste o valor de acordo com a altura da navbar e outros elementos */
-    overflow-y: auto; /* Habilita rolagem vertical */
+    margin-bottom: 115px;
+    max-height: calc(100vh - 200px); /* so the elements don't clash with the navbar */
+    overflow-y: auto;
 }
 
-/* Contêiner das mensagens com rolagem */
 .user-messages {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Alinha as mensagens à direita */
-    gap: 10px; /* Espaçamento entre as bolhas de mensagem */
-    padding: 10px; /* Adiciona espaçamento interno */
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px;
 }
 
-/* Bolhas de mensagem */
 .message-bubble {
-    background-color: #40444b; /* Cor de fundo das bolhas */
+    background-color: #40444b;
     color: #ffffff;
     padding: 10px 15px;
     border-radius: 20px;
-    max-width: 80%; /* Limita a largura das bolhas */
+    max-width: 80%;
     word-wrap: break-word;
     text-align: left;
-    font-size: 18px; /* Aumenta o tamanho da fonte das mensagens */
+    font-size: 18px;
 }

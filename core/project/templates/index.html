@@ -6,7 +6,7 @@
 
 {% if latest_messages_list %}
 
-<fieldset class="position-absolute bottom-0 start-50 translate-middle-x fieldset-messages">
+<fieldset id="messagesDisplay" class="position-absolute bottom-0 start-50 translate-middle-x fieldset-messages">
   {% for message in latest_messages_list %}
 
   <div class="d-flex justify-content-end user-messages">
@@ -19,14 +19,92 @@
 {% endif %}
 
 
-<form action="{% url "sendMessage" %}" method="POST">
+<form id="chatForm" action="{% url "sendMessage" %}" method="POST">
   {% csrf_token %}
 
   <fieldset class="d-flex justify-content-between align-items-end fieldset-default">
 
-    <input type="text" class="form-control" placeholder="Type here..." name="message">
+    <input type="text" class="form-control" placeholder="Type here..." name="message" id="messageInput">
     <input type="submit" value="Enviar" class="btn btn-primary" style="margin-left: 10px;">
   </fieldset>
 
 </form>
+
+<!-- AJAX -->
+<script>
+  /*
+  // getting the CSRFToken in the Cookies of the page
+  function getCookie(name){
+    let value = null;
+    // if the pages contains cookies and they are not empty
+    if (document.cookie && document.cookie !== ''){
+      const cookies = document.cookie.split(';');
+
+      for (let cookie of cookies){
+        cookie = cookie.trim();
+
+        // we do a substring to get the cookie of the exact
+        // size of the name parameter, but we do a +1 since we
+        // check if the equal sign comes right after as to not
+        // end up getting a cookie of similar name
+        if(cookie.substring(0, name.length+1) === (name + '=')){
+          // parses the value (after the equal) of the cookie
+          // while accounting for special characters (URI)
+          value = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+
+    return value;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+  */
+
+  document.getElementById('chatForm').addEventListener('submit', function(e) {
+    // prevents page reload when submitting
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    // AJAX Logic
+
+    // although having string markup, this actually reads
+    // like a Django Template command
+    fetch('{% url "sendMessage" %}', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+      },
+      body: formData,
+    })
+    // received a response from the POST function
+    .then(response => {
+      // this works but there is no 404 html so it just renders
+      // a 404 error
+      if (response.status === 404) window.location.href = "/404";
+      else return response.json();
+    })
+      // parses it into a JSON
+      .then(data => {
+        if (data.sucess) {
+          const messages = document.getElementById('messagesDisplay');
+          const newMessages = document.createElement('div');
+
+          newMessages.classList.add('d-flex', 'justify-content-end', 'user-messages');
+          newMessages.innerHTML = `<div class="message-bubble">${data.message_text}</div>`;
+
+          messages.appendChild(newMessages);
+
+          // clears the input field
+          document.getElementById('messageInput').value = '';
+        } else {
+          console.log('ERROR WHILE SENDING THE MESSAGE');
+        }
+      })
+      .catch(e => console.error('ERROR:', e));
+  });
+</script>
+
 {% endblock content %}

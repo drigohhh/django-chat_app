@@ -1,8 +1,7 @@
 import logging
 
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, JsonResponse
 from django.template import loader
-from django.urls import reverse
 
 from .models import Message
 
@@ -20,18 +19,29 @@ def index(request):
 
 
 def sendMessage(request):
-    log.info(f'mensagem enviada: {request.POST['message']}')
+    if request.method == "POST":
+        log.info(f'mensagem enviada: {request.POST['message']}')
 
-    if not request.POST["message"]:
-        log.error("MENSAGEM VAZIA!")
-        raise Http404("MENSAGEM VAZIA!")
+        if not request.POST["message"]:
+            log.error("EMPTY MESSAGE!")
+            # since page 404 doesn't exist this is just to return
+            # a 404 response
+            raise Http404("EMPTY MESSAGE!")
 
-    try:
-        message = Message(
-            message_text=request.POST["message"],
+        try:
+            message = Message(
+                message_text=request.POST["message"],
+            )
+            message.save()
+        except Exception as e:
+            log.error(f"ERROR: {e}")
+
+        # AJAX will parse this JSON in the frontend
+        return JsonResponse(
+            {
+                "sucess": True,
+                "message_text": message.message_text,
+            }
         )
-        message.save()
-    except Exception as e:
-        log.error(f"ERROR: {e}")
-
-    return HttpResponseRedirect(reverse("index"))
+    else:
+        return JsonResponse({"sucess": False})

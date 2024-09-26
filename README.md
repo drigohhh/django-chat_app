@@ -7,7 +7,7 @@ Project setup instructions here.
 
 Clone the settings.dev.py into a local folder that you can set your own settings for the logger and your specific secret Django key.
 
-`mkdir -p local`
+`mkdir -p local`</br>
 `cp .\core\project\settings\templates\settings.dev.py .\local\settings.dev.py`
 
 You gotta have [Poetry](https://python-poetry.org/) installed to run this project.

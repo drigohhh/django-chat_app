@@ -4,11 +4,13 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.template import loader
 
 from .models import Message
+from .utils.gptApi import printApi
 
 log = logging.getLogger(__name__)
 
 
 def index(request):
+    printApi()
     latest_messages_list = Message.objects.order_by("pub_date")
 
     template = loader.get_template("index.html")

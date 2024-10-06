@@ -46,10 +46,11 @@ input.form-control:focus {
 
 .fieldset-messages {
     width: 700px;
-    position: absolute;
+    position: fixed;
     margin-bottom: 115px;
     max-height: calc(100vh - 200px); /* so the elements don't clash with the navbar */
     overflow-y: auto;
+    bottom: 0;
 }
 
 .user-messages {
@@ -61,7 +62,7 @@ input.form-control:focus {
 }
 
 .message-bubble {
-    background-color: #40444b;
+    background-color: #747b88;
     color: #ffffff;
     padding: 10px 15px;
     border-radius: 20px;

@@ -27,7 +27,7 @@ LOGGING = {
         )
     },
     "root": {
-        "level": "DEBUG",
+        "level": "WARNING",
         "handlers": ["console"],
     },
 }

@@ -13,6 +13,14 @@
     <div class="message-bubble"> {{message.message_text}} </div>
   </div>
 
+    {% if message.responses.all %}
+      {% for response in message.responses.all %}
+        <div class="d-flex justify-content-start user-messages" style="align-items: flex-start;">
+          <div class="message-bubble" style="background-color: #65686b;"> {{response.response_text}} </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+
   {% endfor %}
 </fieldset>
 
@@ -99,6 +107,7 @@
 
           // clears the input field
           document.getElementById('messageInput').value = '';
+          scrollToBottom();
         } else {
           console.log('ERROR WHILE SENDING THE MESSAGE');
         }

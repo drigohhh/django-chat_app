@@ -21,7 +21,7 @@ def index(request):
 
 def sendMessage(request):
     if request.method == "POST":
-        log.info(f'mensagem enviada: {request.POST['message']}')
+        log.info(f'sent message: {request.POST['message']}')
 
         if not request.POST["message"]:
             log.error("EMPTY MESSAGE!")
@@ -29,20 +29,31 @@ def sendMessage(request):
             # a 404 response
             raise Http404("EMPTY MESSAGE!")
 
-        try:
-            data = api.getResponseFromApi(request.POST["message"])
+        # AJAX will parse this JSON in the frontend
+        return JsonResponse(
+            {
+                "sucess": True,
+                "message_text": request.POST["message"],
+            }
+        )
+    else:
+        return JsonResponse({"sucess": False})
 
+
+def receiveResponse(request):
+    if request.method == "POST":
+        responseText = ""
+        try:
             message = Message(
                 message_text=request.POST["message"],
             )
             message.save()
 
-            # This will be changed to another view function
-            # for a smoother user experience, since I would
-            # put too much responsability on the AJAX already
-            # made for the user sent message
+            # reminder that this DOES NOT keep the context of the main conversation,
+            # working on that later, as well Markdown linting support
+            data = api.getResponseFromApi(request.POST["message"])
+            responseText = data["response_text"]
 
-            # reload the page to see the actual api response
             response = Response(
                 question=message,
                 response_text=data["response_text"],
@@ -51,14 +62,14 @@ def sendMessage(request):
                 total_price=data["total_price"],
             )
             response.save()
+
         except Exception as e:
             log.error(f"ERROR: {e}")
 
-        # AJAX will parse this JSON in the frontend
         return JsonResponse(
             {
                 "sucess": True,
-                "message_text": message.message_text,
+                "message_text": responseText,
             }
         )
     else:

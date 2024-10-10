@@ -8,7 +8,6 @@ from langchain_openai import ChatOpenAI
 # from langchain.agents import create_csv_agent
 # from langchain.embeddings import OpenAIEmbeddings
 
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 llm = ChatOpenAI(
     model="gpt-4o-mini",

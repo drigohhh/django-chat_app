@@ -18,6 +18,7 @@ class Response(models.Model):
     completion_tokens = models.PositiveIntegerField()
     prompt_tokens = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=6)
+    pub_date = models.DateTimeField("Date", default=timezone.now)
 
     def __str__(self):
         return self.response_text

@@ -4,9 +4,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # primeira página
+    # first page and logic routes
     path("", views.index, name="index"),
     path("send/", views.sendMessage, name="sendMessage"),
-    # página de admin
+    path("receive/", views.receiveResponse, name="receiveResponse"),
+    # admin page
     path("admin/", admin.site.urls),
 ]

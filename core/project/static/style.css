@@ -4,7 +4,7 @@ body {
 }
 
 .fieldset-default {
-    width: 700px;
+    width: 1000px;
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -45,12 +45,11 @@ input.form-control:focus {
 }
 
 .fieldset-messages {
-    width: 700px;
-    position: fixed;
+    width: 1000px;
     margin-bottom: 115px;
     max-height: calc(100vh - 200px); /* so the elements don't clash with the navbar */
     overflow-y: auto;
-    bottom: 0;
+    scrollbar-color: #40444b #2c2f33;
 }
 
 .user-messages {
@@ -62,7 +61,7 @@ input.form-control:focus {
 }
 
 .message-bubble {
-    background-color: #747b88;
+    background-color: #40444b;
     color: #ffffff;
     padding: 10px 15px;
     border-radius: 20px;
@@ -70,4 +69,8 @@ input.form-control:focus {
     word-wrap: break-word;
     text-align: left;
     font-size: 18px;
+}
+
+.response {
+    background-color: #65686b;
 }

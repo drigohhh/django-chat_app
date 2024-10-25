@@ -1,18 +1,41 @@
+import logging
 import os.path
 
 from langchain_community.callbacks import get_openai_callback
 from langchain_openai import ChatOpenAI
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import START, MessagesState, StateGraph
+
+log = logging.getLogger(__name__)
 
 """For later CSV file support"""
 # from langchain_community.document_loaders.csv_loader import CSVLoader
 # from langchain.agents import create_csv_agent
 # from langchain.embeddings import OpenAIEmbeddings
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not os.getenv("OPENAI_API_KEY"):
+    log.error("NO API KEY")
+
 llm = ChatOpenAI(
     model="gpt-4o-mini",
     stream_usage=True,
 )
+
+workflow = StateGraph(MessagesState)
+
+
+# Callback function for persistence
+def call_model(state: MessagesState):
+    response = llm.invoke(state["messages"])
+    return {"messages": response}
+
+
+workflow.add_edge(START, "llm")
+workflow.add_node("llm", call_model)
+
+memory = MemorySaver()
+app = workflow.compile(memory)
 
 
 def getResponseFromApi(question):

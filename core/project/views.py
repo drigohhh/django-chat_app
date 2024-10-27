@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.template import loader
 
 from .models import Message, Response
-from .utils import langchainGptApi as api
+from .utils.langchainGptApi import getResponseFromApi
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ def receiveResponse(request):
 
             # reminder that this DOES NOT keep the context of the main conversation,
             # working on that later, as well Markdown linting support
-            data = api.getResponseFromApi(request.POST["message"])
+            data = getResponseFromApi(request.POST["message"])
             responseText = data["response_text"]
 
             response = Response(

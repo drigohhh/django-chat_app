@@ -2,6 +2,7 @@ import logging
 import os.path
 
 from langchain_community.callbacks import get_openai_callback
+from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, MessagesState, StateGraph
@@ -26,26 +27,31 @@ workflow = StateGraph(MessagesState)
 
 
 # Callback function for persistence
-def call_model(state: MessagesState):
+def __call_model(state: MessagesState):
     response = llm.invoke(state["messages"])
     return {"messages": response}
 
 
 workflow.add_edge(START, "llm")
-workflow.add_node("llm", call_model)
+workflow.add_node("llm", __call_model)
 
+# Memory for checkpointing the llm context
 memory = MemorySaver()
 app = workflow.compile(memory)
+
+# Thread configuration
+config = {"configurable": {"thread_id": "1"}}
 
 
 def getResponseFromApi(question):
     response_data = {}
+    input_data = [HumanMessage(question)]
 
     with get_openai_callback() as callable:
-        result = llm.invoke(question)
+        result = app.invoke({"messages": input_data}, config)
 
         response_data = {
-            "response_text": result.content,
+            "response_text": result["messages"][-1].content,
             "completion_tokens": callable.completion_tokens,
             "prompt_tokens": callable.prompt_tokens,
             "total_price": callable.total_cost,

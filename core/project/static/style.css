@@ -33,6 +33,33 @@ body {
     color: #ffffff;
     height: 57px;
     font-size: 18px;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    border: none;
+    border-radius: 30px;
+    padding: 0 15px;
+    color: #ffffff;
+    height: 57px;
+    font-size: 18px;
+    background-color: #6c757d;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+#fileButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#fileButton img {
+    width: 24px;
+    height: 24px;
 }
 
 input::placeholder {
@@ -69,6 +96,11 @@ input.form-control:focus {
     word-wrap: break-word;
     text-align: left;
     font-size: 18px;
+}
+
+.message-bubble p {
+    margin: 0;
+    padding: 0;
 }
 
 .response {

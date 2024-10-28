@@ -18,6 +18,7 @@ langchain = "^0.3.2"
 langchain-community = "^0.3.1"
 langchain-openai = "^0.2.2"
 langgraph = "^0.2.39"
+markdown2 = "^2.5.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8.0"

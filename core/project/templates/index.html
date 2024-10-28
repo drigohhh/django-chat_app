@@ -1,5 +1,7 @@
 {% extends "includes/base.html" %}
 
+{% load static %}
+
 {% block title %}CHAT APP TEST{% endblock %}
 
 {% block content %}
@@ -10,13 +12,13 @@
   {% for message in latest_messages_list %}
 
   <div class="d-flex justify-content-end user-messages">
-    <div class="message-bubble"> {{message.message_text}} </div>
+    <div class="message-bubble"> {{message.message_text|safe}} </div>
   </div>
 
-    {% if message.responses.all %}
-      {% for response in message.responses.all %}
+    {% if message.mdResponses %}
+      {% for response in message.mdResponses %}
         <div class="d-flex justify-content-start user-messages" style="align-items: flex-start;">
-          <div class="message-bubble response"> {{response.response_text}} </div>
+          <div class="message-bubble response"> {{response.markdown_text|safe}} </div>
         </div>
       {% endfor %}
     {% endif %}
@@ -25,7 +27,7 @@
 
   <div class="container my-4">
     <div class="d-flex justify-content-center">
-      <h3 style="margin: 0 10px">Actual Conversation</h1>
+      <h3 style="margin: 0 10px">Actual Conversation</h3>
     </div>
   </div>
 
@@ -38,101 +40,22 @@
   {% csrf_token %}
 
   <fieldset class="d-flex justify-content-between align-items-end fieldset-default">
-
+    <!-- Text input -->
     <input type="text" class="form-control" placeholder="Type here..." name="message" id="messageInput">
-    <input id="submitButton" type="submit" value="Send" class="btn btn-primary" style="margin-left: 10px;">
+
+    <!-- File input (hidden) -->
+    <input id="fileInput" type="file" class="d-none">
+
+    <!-- Buttons -->
+    <button id="fileButton" class="btn btn-secondary" style="margin-left: 5px;">
+      <img src="{% static "icons/fileicon.svg" %}" alt="File button icon">
+    </button>
+    <input id="submitButton" type="submit" value="Send" class="btn btn-primary" style="margin-left: 5px;">
   </fieldset>
 
 </form>
 
 <!-- AJAX -->
-<script>
-  if (document.getElementById('messagesDisplay')){
-    document.getElementById('messagesDisplay').scrollTop = document.getElementById('messagesDisplay').scrollHeight;
-  }
-
-  document.getElementById('chatForm').addEventListener('submit', function(e) {
-    // prevents page reload when submitting
-    e.preventDefault();
-
-    // prevents the user from sending another message if it didn't yet
-    // received a proper response from the api
-    const submitButton = document.getElementById("submitButton");
-    submitButton.disabled = true;
-
-    const formData = new FormData(this);
-    const messages = document.getElementById('messagesDisplay');
-
-    const responseMessage = document.createElement('div');
-    responseMessage.classList.add("d-flex", "justify-content-start", "user-messages");
-    responseMessage.style.alignItems = "flex-start";
-
-    // AJAX Logic
-
-    // although having string markup, this actually reads
-    // like a Django Template command
-    fetch('{% url "sendMessage" %}', {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-      },
-      body: formData,
-    })
-    // received a response from the POST function
-    .then(response => {
-      // this works but there is no 404 html so it just renders
-      // a 404 error
-      if (response.status === 404) window.location.href = "/404";
-      else return response.json();
-    })
-      // parses it into a JSON
-      .then(data => {
-        if (data.sucess) {
-          const newMessages = document.createElement('div');
-
-          newMessages.classList.add('d-flex', 'justify-content-end', 'user-messages');
-          newMessages.innerHTML = `<div class="message-bubble">${data.message_text}</div>`;
-
-          messages.appendChild(newMessages);
-
-          // clears the input field
-          document.getElementById('messageInput').value = '';
-
-          // waiting for response template message
-          responseMessage.innerHTML = `<div class="message-bubble response">...</div>`;
-
-          messages.appendChild(responseMessage);
-
-          messages.scrollTop = messages.scrollHeight;
-        }
-        else throw new Error('ERROR WHILE SENDING THE MESSAGE');
-      })
-    .catch(e => console.error('ERROR:', e));
-
-    // logic for receiving a API response
-    fetch('{% url "receiveResponse" %}', {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-      },
-      body: formData,
-    })
-    .then(response => {
-      if (response.status === 404) window.location.href = "/404";
-      else return response.json();
-    })
-      .then(data => {
-        if(data.sucess){
-          responseMessage.innerHTML = `<div class="message-bubble response">${data.message_text}</div>`;
-        }
-        else throw new Error('ERROR WHILE GETTING THE RESPONSE')
-      })
-    .catch(e => console.error('ERROR:', e))
-    .finally(() => {
-      submitButton.disabled = false
-      messages.scrollTop = messages.scrollHeight;
-    });
-  });
-</script>
+<script src="{% static "ajax.js" %}"></script>
 
 {% endblock content %}

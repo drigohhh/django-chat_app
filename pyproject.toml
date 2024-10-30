@@ -32,11 +32,12 @@ exclude = [
     "__pycache__",
     "venv"
 ]
-line-length = 119
+line-length = 100
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"
 multiline-quotes = "double"
+docstring-quotes = "double"
 
 [tool.ruff.lint.mccabe]
 max-complexity = 12

@@ -5,6 +5,7 @@ const submitButton = document.getElementById("submitButton");
 const chatForm = document.getElementById('chatForm');
 const messageInput = document.getElementById('messageInput');
 
+// Forces the scrollbar to the bottom of the display
 if (messagesDisplay) {
     messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
 }
@@ -22,44 +23,59 @@ messageInput.addEventListener('keydown', function (e) {
 });
 
 chatForm.addEventListener('submit', function (e) {
-    // prevents page reload when submitting
+    // Prevents page reload when submitting
     e.preventDefault();
 
-    // prevents the user from sending another message if it didn't yet
-    // received a proper response from the api
+    // Prevents the user from sending another message if it didn't
+    // receive a proper response from the api
     submitButton.disabled = true;
 
     const formData = new FormData(this);
 
-    // message render
+    // Message render
+    const responseMessage = document.createElement('div');
+
     if (formData.get('message')?.trim()) {
+        // In case the user has sent a file
         if (fileInput.files.length > 0) {
             formData.append("file", fileInput.files[0]);
         }
 
-        const newMessages = document.createElement('div');
-
-        newMessages.classList.add('d-flex', 'justify-content-end', 'user-messages');
-        newMessages.innerHTML = `<div class="message-bubble">${formData.get('message')}</div>`;
-
-        messagesDisplay.appendChild(newMessages);
-
-        // clears the input field
-        messageInput.value = '';
-
-        // waiting for response template message
-        const responseMessage = document.createElement('div');
-        responseMessage.classList.add("d-flex", "justify-content-start", "user-messages");
-        responseMessage.style.alignItems = "flex-start";
-        responseMessage.innerHTML = `<div class="message-bubble response">...</div>`;
-
-        messagesDisplay.appendChild(responseMessage);
-
-        messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
-
-        // AJAX Logic
-        // logic for receiving a API response
+        // For markdown parsing in the BackEnd
         fetch('/send/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucess) {
+                    const newMessages = document.createElement('div');
+                    newMessages.classList.add('d-flex', 'justify-content-end', 'user-messages');
+                    newMessages.innerHTML = `<div class="message-bubble">${data.markdown_text}</div>`;
+
+                    messagesDisplay.appendChild(newMessages);
+                    // clears the input fields
+                    messageInput.value = '';
+                    fileInput.value = '';
+
+                    // waiting for response template message
+                    responseMessage.classList.add("d-flex", "justify-content-start", "user-messages");
+                    responseMessage.style.alignItems = "flex-start";
+                    responseMessage.innerHTML = `<div class="message-bubble response">...</div>`;
+
+                    messagesDisplay.appendChild(responseMessage);
+
+                    messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
+                }
+                else throw new Error("ERROR WHILE SENDING THE MESSAGE");
+            })
+            .catch(e => console.error("ERROR:", e));
+
+        // Receiving an API response
+        fetch('/receive/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': formData.get('csrfmiddlewaretoken')

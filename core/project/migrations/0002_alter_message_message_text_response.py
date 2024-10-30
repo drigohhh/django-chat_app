@@ -18,7 +18,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Response",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("response_text", models.TextField()),
                 ("completion_tokens", models.PositiveIntegerField()),
                 ("prompt_tokens", models.PositiveIntegerField()),
@@ -26,7 +31,9 @@ class Migration(migrations.Migration):
                 (
                     "question",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="responses", to="project.message"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="responses",
+                        to="project.message",
                     ),
                 ),
             ],

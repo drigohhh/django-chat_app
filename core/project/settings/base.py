@@ -96,6 +96,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "core/project/static/"),  # noqa: F821 # type: ignore
 ]
 
+MEDIA_ROOT = os.path.join(BASE_DIR, "core/project/media")  # noqa: F821 # type: ignore
+MEDIA_URL = "/media/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

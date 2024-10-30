@@ -19,7 +19,10 @@ def index(request):
 
         mdResponses = []
         for response in message.responses.all():
-            mdResponse = {"original_text": response.response_text, "markdown_text": markdown(response.response_text)}
+            mdResponse = {
+                "original_text": response.response_text,
+                "markdown_text": markdown(response.response_text),
+            }
             mdResponses.append(mdResponse)
 
         message.mdResponses = mdResponses
@@ -32,9 +35,17 @@ def index(request):
 
 
 def sendMessage(request):
+    # This is only for parsing the message the user sents in real-time
+    return JsonResponse({"sucess": True, "markdown_text": markdown(request.POST["message"])})
+
+
+def receiveResponse(request):
     if request.method == "POST":
-        log.info(f'sent message: {request.POST['message']}')
+        file = request.FILES.get("file")
         responseText = ""
+
+        log.info(f'sent message: {request.POST['message']}')
+        log.info(f'file sent? {'True' if file else 'False'}')
 
         if not request.POST["message"]:
             log.error("EMPTY MESSAGE!")
@@ -57,6 +68,7 @@ def sendMessage(request):
                 completion_tokens=data["completion_tokens"],
                 prompt_tokens=data["prompt_tokens"],
                 total_price=data["total_price"],
+                attached_file=file,
             )
             response.save()
 

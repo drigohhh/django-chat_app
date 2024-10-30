@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.db import models
 from django.utils import timezone
 
@@ -14,7 +13,7 @@ class Message(models.Model):
 class Response(models.Model):
     question = models.ForeignKey(Message, models.CASCADE, related_name="responses")
     response_text = models.TextField()
-    # attached_file = models.FileField(upload_to=...)
+    attached_file = models.FileField(upload_to="uploads/", blank=True, null=True)
     completion_tokens = models.PositiveIntegerField()
     prompt_tokens = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=6)

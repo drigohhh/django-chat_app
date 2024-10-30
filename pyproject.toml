@@ -32,7 +32,7 @@ exclude = [
     "__pycache__",
     "venv"
 ]
-line-length = 100
+line-length = 88
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"

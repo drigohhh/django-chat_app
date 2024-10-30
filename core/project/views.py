@@ -36,7 +36,9 @@ def index(request):
 
 def sendMessage(request):
     # This is only for parsing the message the user sents in real-time
-    return JsonResponse({"sucess": True, "markdown_text": markdown(request.POST["message"])})
+    return JsonResponse(
+        {"sucess": True, "markdown_text": markdown(request.POST["message"])}
+    )
 
 
 def receiveResponse(request):

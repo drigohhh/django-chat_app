@@ -16,13 +16,18 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.BigAutoField(
-                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
                     ),
                 ),
                 ("message_text", models.CharField(max_length=256)),
                 (
                     "pub_date",
-                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="Date"),
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="Date"
+                    ),
                 ),
             ],
         ),

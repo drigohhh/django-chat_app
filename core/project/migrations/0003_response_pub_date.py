@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="response",
             name="pub_date",
-            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name="Date"),
+            field=models.DateTimeField(
+                default=django.utils.timezone.now, verbose_name="Date"
+            ),
         ),
     ]

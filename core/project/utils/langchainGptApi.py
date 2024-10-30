@@ -2,6 +2,7 @@ import logging
 import os.path
 
 from langchain_community.callbacks import get_openai_callback
+from langchain_community.document_loaders import CSVLoader
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
@@ -10,7 +11,6 @@ from langgraph.graph import START, MessagesState, StateGraph
 log = logging.getLogger(__name__)
 
 """For later CSV file support"""
-# from langchain_community.document_loaders.csv_loader import CSVLoader
 # from langchain.agents import create_csv_agent
 # from langchain.embeddings import OpenAIEmbeddings
 
@@ -43,9 +43,18 @@ app = workflow.compile(memory)
 config = {"configurable": {"thread_id": "1"}}
 
 
-def getResponseFromApi(question):
+def getResponseFromApi(question, file_path=None):
     response_data = {}
     input_data = [HumanMessage(question)]
+
+    # Files should always be CSV
+    if file_path:
+        if file_path.endswith(".csv"):
+            loader = CSVLoader(file_path)
+            documents = loader.load()
+
+            for doc in documents:
+                input_data.append(HumanMessage(doc.page_content))
 
     with get_openai_callback() as callable:
         result = app.invoke({"messages": input_data}, config)

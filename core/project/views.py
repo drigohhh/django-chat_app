@@ -1,5 +1,8 @@
 import logging
+from os.path import isabs, join
 
+from django.conf import settings
+from django.core.files.storage import default_storage
 from django.http import Http404, HttpResponse, JsonResponse
 from django.template import loader
 from markdown2 import markdown
@@ -44,10 +47,18 @@ def sendMessage(request):
 def receiveResponse(request):
     if request.method == "POST":
         file = request.FILES.get("file")
+        filePath = (
+            default_storage.save(join(settings.MEDIA_ROOT, "uploads", file.name), file)
+            if file
+            else None
+        )
+        if filePath and not isabs(filePath):
+            filePath = join(settings.MEDIA_ROOT, "uploads", filePath.split("/")[1])
+
         responseText = ""
 
         log.info(f'sent message: {request.POST['message']}')
-        log.info(f'file sent? {'True' if file else 'False'}')
+        log.info(f"file sent? {filePath}")
 
         if not request.POST["message"]:
             log.error("EMPTY MESSAGE!")
@@ -61,7 +72,7 @@ def receiveResponse(request):
 
             # reminder that this DOES NOT keep the context of the main conversation,
             # working on that later, as well Markdown linting support
-            data = getResponseFromApi(request.POST["message"])
+            data = getResponseFromApi(request.POST["message"], filePath)
             responseText = data["response_text"]
 
             response = Response(
@@ -70,7 +81,7 @@ def receiveResponse(request):
                 completion_tokens=data["completion_tokens"],
                 prompt_tokens=data["prompt_tokens"],
                 total_price=data["total_price"],
-                attached_file=file,
+                attached_file=filePath,
             )
             response.save()
 

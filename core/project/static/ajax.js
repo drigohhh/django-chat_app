@@ -12,6 +12,7 @@ if (messagesDisplay) {
 
 fileButton.addEventListener('click', function (e) {
     e.preventDefault;
+    fileInput.value = '';
     fileInput.click();
 });
 
@@ -25,6 +26,8 @@ messageInput.addEventListener('keydown', function (e) {
 chatForm.addEventListener('submit', function (e) {
     // Prevents page reload when submitting
     e.preventDefault();
+
+    if (e.target.getAttribute("name") === "file") return;
 
     // Prevents the user from sending another message if it didn't
     // receive a proper response from the api

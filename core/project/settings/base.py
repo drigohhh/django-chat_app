@@ -30,7 +30,7 @@ ROOT_URLCONF = "core.project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "core/project/templates"],  # type: ignore
+        "DIRS": [os.path.join(BASE_DIR, "core", "project", "templates")],  # noqa: F821 # type: ignore
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -52,7 +52,7 @@ WSGI_APPLICATION = "core.project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # type: ignore
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),  # noqa: F821 # type: ignore
     }
 }
 
@@ -93,10 +93,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "core/project/static/"),  # noqa: F821 # type: ignore
+    os.path.join(BASE_DIR, "core", "project", "static"),  # noqa: F821 # type: ignore
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "core/project/media")  # noqa: F821 # type: ignore
+MEDIA_ROOT = os.path.join(BASE_DIR, "core", "project", "media")  # noqa: F821 # type: ignore
 MEDIA_URL = "/media/"
 
 # Default primary key field type

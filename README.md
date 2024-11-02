@@ -15,6 +15,7 @@ Before starting, ensure you have the following installed:
 ### Steps
 
 1. **Clone the repository**
+
    This step downloads the project files to your local machine.
 
    ```bash
@@ -23,6 +24,7 @@ Before starting, ensure you have the following installed:
    ```
 
 2. **Copy the `settings.dev.py` into a local folder**
+
    Create a local directory and copy the settings file needed for development.
 
    ```bash
@@ -40,6 +42,7 @@ Before starting, ensure you have the following installed:
    If this doesn't work, create the folder 'local' at the top of your environment and copy the file manually.
 
 3. **Install Poetry**
+
    Poetry will manage your dependencies and create a virtual environment.
 
    ```bash
@@ -49,6 +52,7 @@ Before starting, ensure you have the following installed:
    Make sure to activate the virtual environment in your IDE.
 
 4. **Set your API key in the environment variable**
+
    Configure your OpenAI API key for the application.
 
    ```python
@@ -58,6 +62,7 @@ Before starting, ensure you have the following installed:
    This variable should be set in the environment created by Poetry. **Ensure** that your code runs from that environment.
 
 5. **Run the Makefile command**
+
    This command will install the dependencies and automatically migrate the database.
 
    ```bash
@@ -65,6 +70,7 @@ Before starting, ensure you have the following installed:
    ```
 
 6. **Host the server**
+
    Start your Django server to run the application.
 
    ```bash

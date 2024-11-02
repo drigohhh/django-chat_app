@@ -8,7 +8,6 @@ Basic chat app with the OpenAI Langchain API using Django for the Python backend
 
 Before starting, ensure you have the following installed:
 
-- [Poetry](https://python-poetry.org/)
 - Python 3.10 or higher
 - Git
 
@@ -41,7 +40,7 @@ Before starting, ensure you have the following installed:
 
    If this doesn't work, create the folder 'local' at the top of your environment and copy the file manually.
 
-3. **Install Poetry**
+3. **Install [Poetry](https://python-poetry.org/)**
 
    Poetry will manage your dependencies and create a virtual environment.
 

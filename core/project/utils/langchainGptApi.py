@@ -1,19 +1,16 @@
 import logging
 import os.path
 
+import pandas as pd
+from langchain.agents import AgentExecutor
 from langchain_community.callbacks import get_openai_callback
-from langchain_community.document_loaders import CSVLoader
 from langchain_core.messages import HumanMessage
+from langchain_experimental.agents import create_pandas_dataframe_agent
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, MessagesState, StateGraph
 
 log = logging.getLogger(__name__)
-
-"""For later CSV file support"""
-# from langchain.agents import create_csv_agent
-# from langchain.embeddings import OpenAIEmbeddings
-
 
 if not os.getenv("OPENAI_API_KEY"):
     log.error("NO API KEY")
@@ -42,25 +39,54 @@ app = workflow.compile(memory)
 # Thread configuration
 config = {"configurable": {"thread_id": "1"}}
 
+# File related configuration of the Agent
+dfAgent: AgentExecutor = None
 
-def getResponseFromApi(question, file_path=None):
+# Altering the final LLM in case a file is sent
+request_llm = None
+
+
+def getResponseFromApi(question: str, file_path: str = None):
+    global dfAgent
+    global request_llm
     response_data = {}
     input_data = [HumanMessage(question)]
 
-    # Files should always be CSV
+    # No need to use the DataFrame agent if the user only sends
+    # normal messages
+    if not request_llm:
+        request_llm = app
+
+    # Files should always be CSV or XLSX
     if file_path:
         if file_path.endswith(".csv"):
-            loader = CSVLoader(file_path)
-            documents = loader.load()
+            df = pd.read_csv(file_path)
+        elif file_path.endswith(".xlsx"):
+            df = pd.read_excel(file_path)
+        else:
+            raise TypeError("Wrong File type")
 
-            for doc in documents:
-                input_data.append(HumanMessage(doc.page_content))
+        dfAgent = create_pandas_dataframe_agent(
+            llm,
+            df,
+            agent_type="openai-tools",
+            allow_dangerous_code=True,  # Later to be implemented a Docker Container
+        )
+        # Redefines the final LLM as a DataFrame Agent, this raises
+        # a problem about context window in the about the previous file sent
+        # (in case of sending a new File), a simple conditional logic would fix this
+        request_llm = dfAgent
 
     with get_openai_callback() as callable:
-        result = app.invoke({"messages": input_data}, config)
+        # Agents keep the context of the coversation, so the question is passed directly
+        result = request_llm.invoke(
+            {"input": question} if dfAgent else {"messages": input_data}, config
+        )
 
         response_data = {
-            "response_text": result["messages"][-1].content,
+            "response_text": result["output"]
+            if dfAgent
+            else result["messages"][-1].content,
             "completion_tokens": callable.completion_tokens,
             "prompt_tokens": callable.prompt_tokens,
             "total_price": callable.total_cost,

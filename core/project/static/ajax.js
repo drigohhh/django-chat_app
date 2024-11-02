@@ -23,14 +23,29 @@ messageInput.addEventListener('keydown', function (e) {
     }
 });
 
+fileInput.addEventListener('change', function (e) {
+    // This is to prevent the form being sent if a file is loaded in the website
+    e.preventDefault();
+
+    const file = e.target.files[0];
+
+    if (file) {
+        fileExtension = file.name.split('.').pop().toLowerCase();
+
+        console.log(fileExtension)
+
+        if (fileExtension !== 'csv' && fileExtension !== 'xlsx'){
+            alert("Please only send CSV or XLSX files.");
+            fileInput.value = '';
+        }
+    }
+});
+
 chatForm.addEventListener('submit', function (e) {
     // Prevents page reload when submitting
     e.preventDefault();
 
-    if (e.target.getAttribute("name") === "file") return;
-
     // Prevents the user from sending another message if it didn't
-    // receive a proper response from the api
     submitButton.disabled = true;
 
     const formData = new FormData(this);
@@ -42,6 +57,14 @@ chatForm.addEventListener('submit', function (e) {
         // In case the user has sent a file
         if (fileInput.files.length > 0) {
             formData.append("file", fileInput.files[0]);
+
+            const titleTag = document.createElement('div');
+            titleTag.classList.add('container', 'my-4');
+            titleTag.innerHTML = `
+            <div class="d-flex justify-content-center">
+                <h3 style="margin: 0 10px; color: #12e34a">New conversation with a File Agent</h3>
+            </div>`;
+            messagesDisplay.appendChild(titleTag);
         }
 
         // For markdown parsing in the BackEnd

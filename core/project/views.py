@@ -46,6 +46,7 @@ def sendMessage(request):
 
 def receiveResponse(request):
     if request.method == "POST":
+        # File path fixing
         file = request.FILES.get("file")
         filePath = (
             default_storage.save(join(settings.MEDIA_ROOT, "uploads", file.name), file)
@@ -60,6 +61,10 @@ def receiveResponse(request):
         log.info(f'sent message: {request.POST['message']}')
         log.info(f"file sent? {filePath}")
 
+        # For some reason filePath is reset so redefining it to a variable
+        # seems to be the better alternative
+        definitiveFilePath = filePath
+
         if not request.POST["message"]:
             log.error("EMPTY MESSAGE!")
             raise Http404("EMPTY MESSAGE!")
@@ -72,7 +77,7 @@ def receiveResponse(request):
 
             # reminder that this DOES NOT keep the context of the main conversation,
             # working on that later, as well Markdown linting support
-            data = getResponseFromApi(request.POST["message"], filePath)
+            data = getResponseFromApi(request.POST["message"], definitiveFilePath)
             responseText = data["response_text"]
 
             response = Response(
@@ -81,7 +86,7 @@ def receiveResponse(request):
                 completion_tokens=data["completion_tokens"],
                 prompt_tokens=data["prompt_tokens"],
                 total_price=data["total_price"],
-                attached_file=filePath,
+                attached_file=definitiveFilePath,
             )
             response.save()
 

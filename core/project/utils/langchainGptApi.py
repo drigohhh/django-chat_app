@@ -73,8 +73,9 @@ def getResponseFromApi(question: str, file_path: str = None):
             allow_dangerous_code=True,  # Later to be implemented a Docker Container
         )
         # Redefines the final LLM as a DataFrame Agent, this raises
-        # a problem about context window in the about the previous file sent
-        # (in case of sending a new File), a simple conditional logic would fix this
+        # a problem of the context window about the previous file sent, that means
+        # it would lose context of any older file sent, in case of sending a new File;
+        # A simple conditional logic would fix this
         request_llm = dfAgent
 
     with get_openai_callback() as callable:
